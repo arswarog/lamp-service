@@ -1,0 +1,35 @@
+version: '3.0'
+
+services:
+
+  nginx:
+    image: nginx
+    environment:
+      - VIRTUAL_HOST=example.local
+    depends_on:
+      - php
+    volumes:
+      - ./nginx/default.nginx:/etc/nginx/conf.d/default.conf
+      - ./html/:/var/www/html/
+    networks:
+      - frontend
+      - backend
+
+  php:
+    image: lamp-php:latest
+    volumes:
+      - ./php/php.ini:/usr/local/etc/php/php.ini
+      - ./html/:/var/www/html/
+    networks:
+      - backend
+      - lamp
+
+
+networks:
+  lamp:
+    external:
+      name: lamp_lamp
+  frontend:
+    external:
+      name: lamp_proxy
+  backend:

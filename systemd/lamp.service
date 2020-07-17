@@ -1,0 +1,11 @@
+[Unit]
+Description=LAMP service
+After=docker.target
+
+[Service]
+WorkingDirectory=/srv/lamp
+Type=one-shot
+ExecStart=/usr/bin/docker-compose up
+
+[Install]
+WantedBy=multi-user.target

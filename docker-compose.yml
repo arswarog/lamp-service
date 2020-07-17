@@ -1,0 +1,41 @@
+version: '3.0'
+
+services:
+
+  proxy:
+    image: jwilder/nginx-proxy
+    ports:
+      - 80:80
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    networks:
+      - proxy
+
+
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - ./data/mysql/data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - lamp
+
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    environment:
+      - VIRTUAL_HOST=phpmyadmin.local
+      - PMA_HOST=mysql
+      - PMA_USER=root
+      - PMA_PASSWORD=root
+    networks:
+      - proxy
+      - lamp
+
+networks:
+  proxy:
+    driver: bridge
+  lamp:
+    driver: bridge
+    
